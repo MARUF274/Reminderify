@@ -1,13 +1,18 @@
-# Welcome page, Login Page and Sign up page - Flutter UI
+How to use?
 
-## [Watch it on YouTube](https://youtu.be/ExKYjqgswJg)
+Pre Req: Flutter, VS Code, dart, emu/android
 
-**Packages we are using:**
+Cloning
+1. open git bash
+2. type "git clone -b 3rd_stage https://github.com/MARUF274/Reminderify" 
 
-- flutter_svg: [link](https://pub.dev/packages/flutter_svg)
+Before run
+1. open folder in VScode
+2. open terminal in VSCode
+3. type "flutter pub get" 
 
-We design 3 screens first one is a welcome screen like then user open your app it shows then users have two options, if he has an account then press the login button and it just shifts him to the login screen or if he or she don't have an account then press signup button its transfers to the signup screen.
-
-### Auth UI
-
-![App UI](/UI.png)
+How to run
+1. enable debugging option on phone
+2. connect phone to laptop via usb
+3. open VSCode terminal
+4. type "flutter run -v"
