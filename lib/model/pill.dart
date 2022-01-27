@@ -4,7 +4,7 @@ class Pill {
   String amount;
   String type;
   int howManyWeeks;
-  String taskForm;
+  String reminderForm;
   int time;
   int notifyId;
 
@@ -13,7 +13,7 @@ class Pill {
       this.howManyWeeks,
       this.time,
       this.amount,
-      this.taskForm,
+      this.reminderForm,
       this.name,
       this.type,
       this.notifyId});
@@ -24,10 +24,6 @@ class Pill {
     Map<String, dynamic> map = Map();
     map['id'] = this.id;
     map['name'] = this.name;
-    map['amount'] = this.amount;
-    map['type'] = this.type;
-    map['howManyWeeks'] = this.howManyWeeks;
-    map['taskForm'] = this.taskForm;
     map['time'] = this.time;
     map['notifyId'] = this.notifyId;
     return map;
@@ -40,18 +36,11 @@ class Pill {
     return Pill(
         id: pillMap['id'],
         name: pillMap['name'],
-        amount: pillMap['amount'],
-        type: pillMap['type'],
-        howManyWeeks: pillMap['howManyWeeks'],
-        taskForm: pillMap['taskForm'],
         time: pillMap['time'],
         notifyId: pillMap['notifyId']);
   }
-//=====================================================================
-
-  //---------------------| Get the task image path |-------------------------
   String get image {
-    switch (this.taskForm) {
+    switch (this.reminderForm) {
       case "Syrup":
         return "assets/images/syrup.png";
         break;

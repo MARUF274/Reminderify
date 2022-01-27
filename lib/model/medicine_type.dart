@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 
-class TaskType {
+class ReminderType {
   String name;
   Widget image;
   bool isChoose;
-  TaskType(this.name, this.image, this.isChoose);
+  ReminderType(this.name, this.image, this.isChoose);
 }

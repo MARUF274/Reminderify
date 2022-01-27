@@ -6,45 +6,27 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import '../../database/repository.dart';
 import '../../helpers/snack_bar.dart';
-import '../../model/medicine_type.dart';
 import '../../model/pill.dart';
 import '../../notifications/notifications.dart';
 import '../../helpers/platform_flat_button.dart';
-import '../../screens/add_new_medicine/form_fields.dart';
-import '../../screens/add_new_medicine/medicine_type_card.dart';
+import '../../screens/add_new_reminder/form_fields.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
-class AddNewMedicine extends StatefulWidget {
+class AddNewReminder extends StatefulWidget {
   @override
-  _AddNewMedicineState createState() => _AddNewMedicineState();
+  _AddNewReminderState createState() => _AddNewReminderState();
 }
 
-class _AddNewMedicineState extends State<AddNewMedicine> {
+class _AddNewReminderState extends State<AddNewReminder> {
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final Snackbar snackbar = Snackbar();
 
-  //task types
-  final List<String> weightValues = ["pills", "ml", "mg"];
-
-  //list of tasks forms objects
-  final List<TaskType> taskTypes = [
-    TaskType("Syrup", Image.asset("assets/images/syrup.png"), true),
-    TaskType("Pill", Image.asset("assets/images/pills.png"), false),
-    TaskType("Capsule", Image.asset("assets/images/capsule.png"), false),
-    TaskType("Cream", Image.asset("assets/images/cream.png"), false),
-    TaskType("Drops", Image.asset("assets/images/drops.png"), false),
-    TaskType("Syringe", Image.asset("assets/images/syringe.png"), false),
-  ];
-
   //-------------Pill object------------------
-  int howManyWeeks = 1;
-  String selectWeight;
   DateTime setDate = DateTime.now();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController amountController = TextEditingController();
 
   //==========================================
 
@@ -57,7 +39,6 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
   @override
   void initState() {
     super.initState();
-    selectWeight = weightValues[0];
     initNotifies();
   }
 
@@ -99,7 +80,7 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
                 height: deviceHeight * 0.05,
                 child: FittedBox(
                     child: Text(
-                  "Add Pills",
+                  "Add Reminder",
                   style: Theme.of(context)
                       .textTheme
                       .headline3
@@ -113,42 +94,10 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
                 height: deviceHeight * 0.37,
                 child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: FormFields(
-                        howManyWeeks,
-                        selectWeight,
-                        popUpMenuItemChanged,
-                        sliderChanged,
-                        nameController,
-                        amountController)),
-              ),
-              Container(
-                height: deviceHeight * 0.035,
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: FittedBox(
-                    child: Text(
-                      "Medicine form",
-                      style: TextStyle(
-                          color: Colors.grey[800],
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
+                    child: FormFields(nameController)),
               ),
               SizedBox(
                 height: deviceHeight * 0.02,
-              ),
-              Container(
-                height: 100,
-                child: ListView(
-                  shrinkWrap: true,
-                  scrollDirection: Axis.horizontal,
-                  children: <Widget>[
-                    ...taskTypes
-                        .map((type) => MedicineTypeCard(type, taskTypeClick))
-                  ],
-                ),
               ),
               SizedBox(
                 height: deviceHeight * 0.03,
@@ -245,13 +194,6 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
   }
 
   //slider changer
-  void sliderChanged(double value) =>
-      setState(() => this.howManyWeeks = value.round());
-
-  //choose popum menu item
-  void popUpMenuItemChanged(String value) =>
-      setState(() => this.selectWeight = value);
-
   //------------------------OPEN TIME PICKER (SHOW)----------------------------
   //------------------------CHANGE CHOOSE PILL TIME----------------------------
 
@@ -296,29 +238,19 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
     });
   }
 
-  //=======================================================================================================
-
-  //--------------------------------------SAVE PILL IN DATABASE---------------------------------------
   Future savePill() async {
-    //check if task time is lower than actual time
     if (setDate.millisecondsSinceEpoch <=
         DateTime.now().millisecondsSinceEpoch) {
-      snackbar.showSnack("Check your task time and date", _scaffoldKey, null);
+      snackbar.showSnack(
+          "Check your reminder time and date", _scaffoldKey, null);
     } else {
       //create pill object
       Pill pill = Pill(
-          amount: amountController.text,
-          howManyWeeks: howManyWeeks,
-          taskForm: taskTypes[
-                  taskTypes.indexWhere((element) => element.isChoose == true)]
-              .name,
           name: nameController.text,
           time: setDate.millisecondsSinceEpoch,
-          type: selectWeight,
           notifyId: Random().nextInt(10000000));
 
-      //---------------------| Save as many tasks as many user checks |----------------------
-      for (int i = 0; i < howManyWeeks; i++) {
+      for (int i = 0; i < 2; i++) {
         dynamic result =
             await _repository.insertData("Pills", pill.pillToMap());
         if (result == null) {
@@ -328,12 +260,8 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
           //set the notification schneudele
           tz.initializeTimeZones();
           tz.setLocalLocation(tz.getLocation('Europe/Warsaw'));
-          await _notifications.showNotification(
-              pill.name,
-              pill.amount + " " + pill.taskForm + " " + pill.type,
-              time,
-              pill.notifyId,
-              flutterLocalNotificationsPlugin);
+          await _notifications.showNotification(pill.name, pill.amount, time,
+              pill.notifyId, flutterLocalNotificationsPlugin);
           setDate = setDate.add(Duration(milliseconds: 604800000));
           pill.time = setDate.millisecondsSinceEpoch;
           pill.notifyId = Random().nextInt(10000000);
@@ -345,19 +273,6 @@ class _AddNewMedicineState extends State<AddNewMedicine> {
     }
   }
 
-  //=================================================================================================
-
-  //----------------------------CLICK ON MEDICINE FORM CONTAINER----------------------------------------
-  void taskTypeClick(TaskType task) {
-    setState(() {
-      taskTypes.forEach((taskType) => taskType.isChoose = false);
-      taskTypes[taskTypes.indexOf(task)].isChoose = true;
-    });
-  }
-
-  //=====================================================================================================
-
-  //get time difference
   int get time =>
       setDate.millisecondsSinceEpoch -
       tz.TZDateTime.now(tz.local).millisecondsSinceEpoch;

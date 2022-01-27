@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../model/pill.dart';
-import '../../screens/home/medicine_card.dart';
+import '../../screens/home/reminder_card.dart';
 
-class TasksList extends StatelessWidget {
-  final List<Pill> listOfTasks;
+class RemindersList extends StatelessWidget {
+  final List<Pill> listOfReminders;
   final Function setData;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  TasksList(
-      this.listOfTasks, this.setData, this.flutterLocalNotificationsPlugin);
+  RemindersList(
+      this.listOfReminders, this.setData, this.flutterLocalNotificationsPlugin);
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemBuilder: (context, index) => MedicineCard(
-          listOfTasks[index], setData, flutterLocalNotificationsPlugin),
-      itemCount: listOfTasks.length,
+      itemBuilder: (context, index) => ReminderCard(
+          listOfReminders[index], setData, flutterLocalNotificationsPlugin),
+      itemCount: listOfReminders.length,
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
     );

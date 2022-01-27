@@ -5,16 +5,17 @@ import '../../database/repository.dart';
 import '../../model/pill.dart';
 import '../../notifications/notifications.dart';
 
-class TaskCard extends StatelessWidget {
-  final Pill task;
+class ReminderCard extends StatelessWidget {
+  final Pill reminder;
   final Function setData;
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-  TaskCard(this.task, this.setData, this.flutterLocalNotificationsPlugin);
+  ReminderCard(
+      this.reminder, this.setData, this.flutterLocalNotificationsPlugin);
 
   @override
   Widget build(BuildContext context) {
-    //check if the task time is lower than actual
-    final bool isEnd = DateTime.now().millisecondsSinceEpoch > task.time;
+    
+    final bool isEnd = DateTime.now().millisecondsSinceEpoch > reminder.time;
 
     return Card(
         elevation: 0.0,
@@ -23,12 +24,12 @@ class TaskCard extends StatelessWidget {
         child: ListTile(
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-            onLongPress: () =>
-                _showDeleteDialog(context, task.name, task.id, task.notifyId),
+            onLongPress: () => _showDeleteDialog(
+                context, reminder.name, reminder.id, reminder.notifyId),
             contentPadding:
                 EdgeInsets.symmetric(vertical: 15.0, horizontal: 15.0),
             title: Text(
-              task.name,
+              reminder.name,
               style: Theme.of(context).textTheme.headline1.copyWith(
                   color: Colors.black,
                   fontSize: 20.0,
@@ -37,7 +38,7 @@ class TaskCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             subtitle: Text(
-              "${task.amount} ${task.taskForm}",
+              "${reminder.amount} ${reminder.reminderForm}",
               style: Theme.of(context).textTheme.headline5.copyWith(
                   color: Colors.grey[600],
                   fontSize: 15.0,
@@ -49,8 +50,8 @@ class TaskCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
-                  DateFormat("HH:mm")
-                      .format(DateTime.fromMillisecondsSinceEpoch(task.time)),
+                  DateFormat("HH:mm").format(
+                      DateTime.fromMillisecondsSinceEpoch(reminder.time)),
                   style: TextStyle(
                       color: Colors.grey[500],
                       fontWeight: FontWeight.w400,
@@ -59,29 +60,18 @@ class TaskCard extends StatelessWidget {
                 ),
               ],
             ),
-            leading: Container(
-              width: 60.0,
-              height: 60.0,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(50.0),
-                child: ColorFiltered(
-                    colorFilter: ColorFilter.mode(
-                        isEnd ? Colors.white : Colors.transparent,
-                        BlendMode.saturation),
-                    child: Image.asset(task.image)),
-              ),
-            )));
+            ));
   }
 
   //--------------------------| SHOW THE DELETE DIALOG ON THE SCREEN |-----------------------
 
   void _showDeleteDialog(
-      BuildContext context, String taskName, int taskId, int notifyId) {
+      BuildContext context, String reminderName, int reminderId, int notifyId) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
               title: Text("Delete ?"),
-              content: Text("Are you sure to delete $taskName task?"),
+              content: Text("Are you sure to delete $reminderName ?"),
               contentTextStyle:
                   TextStyle(fontSize: 17.0, color: Colors.grey[800]),
               actions: [
@@ -100,7 +90,7 @@ class TaskCard extends StatelessWidget {
                   child: Text("Delete",
                       style: TextStyle(color: Theme.of(context).primaryColor)),
                   onPressed: () async {
-                    await Repository().deleteData('Pills', taskId);
+                    await Repository().deleteData('Pills', reminderId);
                     await Notifications().removeNotify(
                         notifyId, flutterLocalNotificationsPlugin);
                     setData();

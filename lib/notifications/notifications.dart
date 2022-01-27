@@ -34,7 +34,7 @@ class Notifications {
         tz.TZDateTime.now(tz.local).add(Duration(milliseconds: time)),
         const NotificationDetails(
             android: AndroidNotificationDetails(
-                'tasks_id', 'tasks', 'tasks_notification_channel',
+                'reminders_id', 'reminders', 'reminders_notification_channel',
                 importance: Importance.high,
                 priority: Priority.high,
                 color: Colors.cyanAccent)),

@@ -6,9 +6,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import '../../notifications/notifications.dart';
 import '../../database/repository.dart';
 import '../../model/pill.dart';
-import '../../screens/home/medicines_list.dart';
+import '../../screens/home/reminders_list.dart';
 import '../../screens/home/calendar.dart';
 import '../../model/calendar_day_model.dart';
+import '../../screens/add_new_reminder/add_new_reminder.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -66,7 +67,7 @@ class _HomeState extends State<Home> {
       elevation: 2.0,
       onPressed: () async {
         //refresh the pills from database
-        await Navigator.pushNamed(context, "/add_new_task")
+        await Navigator.pushNamed(context, "/add_new_reminder")
             .then((_) => setData());
       },
       child: Icon(
@@ -92,10 +93,10 @@ class _HomeState extends State<Home> {
                   height: deviceHeight * 0.04,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 5.0),
+                  padding: EdgeInsets.symmetric(horizontal: 3.0),
                   child: Container(
                     alignment: Alignment.topCenter,
-                    height: deviceHeight * 0.1,
+                    height: deviceHeight * 0.15,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -103,7 +104,7 @@ class _HomeState extends State<Home> {
                           "Journal",
                           style: Theme.of(context)
                               .textTheme
-                              .headline1
+                              .headline2
                               .copyWith(color: Colors.black),
                         ),
                         ShakeAnimatedWidget(
@@ -142,7 +143,7 @@ class _HomeState extends State<Home> {
                           speed: Duration(milliseconds: 150),
                         ),
                       )
-                    : MedicinesList(
+                    : RemindersList(
                         dailyPills, setData, flutterLocalNotificationsPlugin)
               ],
             ),

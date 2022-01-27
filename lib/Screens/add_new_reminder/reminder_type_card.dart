@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../model/medicine_type.dart';
 
-class TaskTypeCard extends StatelessWidget {
-  final TaskType pillType;
+class ReminderTypeCard extends StatelessWidget {
+  final ReminderType pillType;
   final Function handler;
-  TaskTypeCard(this.pillType, this.handler);
+  ReminderTypeCard(this.pillType, this.handler);
   @override
   Widget build(BuildContext context) {
     return Row(

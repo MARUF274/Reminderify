@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_auth/Screens/Login/login_screen.dart';
-import 'package:flutter_auth/Screens/Signup/signup_screen.dart';
 import 'package:flutter_auth/Screens/Mainpage/mainpage_screen.dart';
 import 'package:flutter_auth/Screens/Mainpage/components/background.dart';
 import 'package:flutter_auth/components/rounded_button.dart';
